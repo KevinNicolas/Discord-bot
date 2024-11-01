@@ -15,9 +15,9 @@ const client = new Client({ intents })
 
 async function boostrap() {
   
-  await updateAllGuildCommands(client);
   loadListeners(client);
-
+  
   client.login(Config.discord.token);
+  await updateAllGuildCommands(client);
 }
 boostrap();
