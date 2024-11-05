@@ -15,6 +15,9 @@ export const Config = Object.freeze({
     appId: process.env.APP_ID!,
     token: process.env.DISCORD_TOKEN!,
     publicKey: process.env.PUBLIC_KEY!,
+  },
+  youtube: {
+    credential: process.env.YT_CREDENTIAL
   }
 })
 

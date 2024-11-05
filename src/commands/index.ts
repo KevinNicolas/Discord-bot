@@ -1,27 +1,14 @@
 export * from './ping.command'
 
-import { PingCommand } from './ping.command'
+import { JoinCommand } from './join.command';
+import { LeaveCommand } from './leave.command';
+import { PingCommand } from './ping.command';
+import { PlayCommand } from './play.command';
 
 export const commands = Object.freeze({
-  ping: PingCommand
+  join: JoinCommand,
+  leave: LeaveCommand,
+  ping: PingCommand,
+  play: PlayCommand
 })
 export default commands;
-
-// const rest = new REST({ version: "10" }).setToken(Config.discord.token)
-
-// type DeployCommandsProps = {
-//   guildId: string;
-// };
-
-// export async function deployCommands({ guildId }: DeployCommandsProps) {
-//   try {
-//     await rest.put(
-//       Routes.applicationGuildCommands(Config.discord.appId, guildId),
-//       {
-//         body: Object.values(commands).map(({ data }) => data)
-//       }
-//     )
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }

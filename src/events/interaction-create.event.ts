@@ -1,5 +1,5 @@
 import type { CacheType, Interaction } from "discord.js";
-import { commands } from '../commands'
+import { commands } from 'src/commands'
 
 export async function onInteractionCreate(interaction: Interaction<CacheType>) {
   if (!interaction.isCommand()) {
@@ -7,6 +7,6 @@ export async function onInteractionCreate(interaction: Interaction<CacheType>) {
   }
   const { commandName } = interaction;
   if (commands[commandName as keyof typeof commands]) {
-    commands[commandName as keyof typeof commands].execute(interaction);
+    commands[commandName as keyof typeof commands].execute(interaction as any);
   }
 }

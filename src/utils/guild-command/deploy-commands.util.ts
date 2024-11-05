@@ -1,6 +1,6 @@
 import { REST, Routes } from 'discord.js'
-import Config from '../config'
-import commands from '../commands'
+import Config from 'src/config'
+import commands from 'src/commands'
 
 const rest = new REST({ version: "10" }).setToken(Config.discord.token)
 
