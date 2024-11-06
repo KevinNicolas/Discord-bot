@@ -29,6 +29,7 @@ function handleJoinCommand(interaction: ChatInputCommandInteraction, options?: I
   })
 
   reply("Done");
+  connection.setSpeaking(false);
   return connection;
 }
 

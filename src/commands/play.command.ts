@@ -1,18 +1,18 @@
 import type { ChatInputCommandInteraction } from 'discord.js'
-import path from 'path'
 import { SlashCommandBuilder } from 'discord.js'
-import { createAudioResource, createAudioPlayer, AudioPlayerStatus, NoSubscriberBehavior } from '@discordjs/voice'
+import { createAudioResource, createAudioPlayer, AudioPlayerStatus, NoSubscriberBehavior, StreamType } from '@discordjs/voice'
+import { YtdlService } from 'src/services'
 import { generateReplyFn, getVoiceChannelConnection } from 'src/utils'
 import { JoinCommand } from './join.command'
 
 const commandDefinition = new SlashCommandBuilder()
   .setName('play')
   .setDescription('Play music!')
-  // .addStringOption((option) => option
-  //   .setName('url')
-  //   .setDescription('Url de la musica')
-  //   .setRequired(true)
-  // )
+  .addStringOption((option) => option
+    .setName('url')
+    .setDescription('Url de la musica')
+    .setRequired(true)
+  )
 
 async function handlePlayCommand(interaction: ChatInputCommandInteraction) {
   const reply = generateReplyFn(interaction);
@@ -32,11 +32,13 @@ async function handlePlayCommand(interaction: ChatInputCommandInteraction) {
 
   voiceChannelConnection.setSpeaking(true);
   const sub = voiceChannelConnection.subscribe(player);
-  const source = createAudioResource(path.join(__dirname, '../song.mp3'));
+  const audio = await YtdlService.fetchAudio(interaction.options.getString('url', true));
+  const source = createAudioResource(audio.stream);
+  source.volume?.setVolumeLogarithmic(10/100);
   sub?.player.play(source);
 
 
-  reply("Done")
+  reply(`Reproduciendo "${audio.info.title}"`);
 }
 
 export const PlayCommand = {
