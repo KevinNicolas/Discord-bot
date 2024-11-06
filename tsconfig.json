@@ -8,10 +8,11 @@
     "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
     "strict": true,                                      /* Enable all strict type-checking options. */
     "strictNullChecks": true,                         /* When type checking, take into account 'null' and 'undefined'. */
-    "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["/src/*"]
-    }
+    "skipLibCheck": true,   
+    "outDir": "build",
+    "rootDir": "./src",
+    "moduleResolution": "Node",
+    "baseUrl": "./src",
+    "composite": true
   }
 }

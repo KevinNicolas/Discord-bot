@@ -1,39 +1,34 @@
-import type { ChatInputCommandInteraction, GuildMember } from 'discord.js'
-import { SlashCommandBuilder } from 'discord.js'
-import { joinVoiceChannel, VoiceConnection } from '@discordjs/voice'
-import { generateReplyFn } from 'src/utils'
+import type { Client, ChatInputCommandInteraction } from 'discord.js'
+import { SlashCommandBuilder } from "discord.js";
+import { Command } from "../command";
+import { joinIntoVoiceChannel } from '../utils'
 
-const commandDefinition = new SlashCommandBuilder()
-  .setName('join')
-  .setDescription('Join in a voice channel');
+export class JoinCommand extends Command {
+  constructor(client: Client) {
+    const name = 'join';
+    const commandDefinition = new SlashCommandBuilder()
+      .setName(name)
+      .setDescription('Hace que el bot ingrese al canal de voz en el que te encuentras');
 
-
-interface IOptions {
-  sendReply?: boolean
-}
-
-function handleJoinCommand(interaction: ChatInputCommandInteraction, options?: IOptions): VoiceConnection | null {
-  const { sendReply = true } = options ?? {}
-  const reply = generateReplyFn(interaction, () => sendReply)
-
-  const member: GuildMember = interaction.member as GuildMember;
-  if (!member.voice.channel) {
-    reply("No estas en un canal de voz");
-    return null;
+    super({
+      client,
+      name,
+      commandDefinition
+    })
   }
 
-  const connection = joinVoiceChannel({
-    channelId: member.voice.channel?.id,
-    guildId: interaction.guild!.id,
-    adapterCreator: interaction.guild!.voiceAdapterCreator as any,
-  })
+  public execute(interaction: ChatInputCommandInteraction, opts?: Record<string, any>): void {
+    const reply = this.getReply(interaction);
 
-  reply("Done");
-  connection.setSpeaking(false);
-  return connection;
+    const voiceChannelInfo = joinIntoVoiceChannel(interaction);
+    if (voiceChannelInfo.error) {
+      reply(voiceChannelInfo.error);
+      return;
+    }
+
+    reply(`Ingresando a "${voiceChannelInfo.voiceChannel?.name}"`)
+  }
 }
 
-export const JoinCommand = {
-  data: commandDefinition,
-  execute: handleJoinCommand
-}
+export default JoinCommand
+module.exports = JoinCommand

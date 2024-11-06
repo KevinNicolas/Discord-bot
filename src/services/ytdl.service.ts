@@ -7,16 +7,23 @@ interface IAudioInfo {
 
 export class YtdlService {
   static async fetchAudio(url: string): Promise<IAudioInfo> {
-    const videoInformation = await ytdl.getBasicInfo(url);
-    const stream = ytdl(url, {
+    const videoInformation = await this.fetchBasicInfo(url)
+    const stream = this.fetchStream(url)
+    
+    return {
+      info: videoInformation,
+      stream
+    }
+  }
+  
+  static fetchStream(url: string) {
+    return ytdl(url, {
       quality: 'highestaudio',
       filter: 'audioonly',
     })
-    
-    return {
-      info: videoInformation.videoDetails,
-      stream
-    }
+  }
 
+  static async fetchBasicInfo(url: string) {
+    return (await ytdl.getBasicInfo(url)).videoDetails
   }
 }

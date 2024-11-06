@@ -3,9 +3,9 @@ import { SlashCommandBuilder } from "discord.js";
 import { Command } from "../command"
 import { getVoiceChannelConnection } from '../utils';
 
-export class LeaveCommand extends Command {
+export class AndateALaChuchaCommand extends Command {
   constructor(client: Client) {
-    const name = 'leave';
+    const name = 'andate-a-la-chucha';
     const commandDefinition = new SlashCommandBuilder()
       .setName(name)
       .setDescription('Salir del canal de voz');
@@ -30,5 +30,5 @@ export class LeaveCommand extends Command {
   }
 }
 
-export default LeaveCommand
-module.exports = LeaveCommand
+export default AndateALaChuchaCommand
+module.exports = AndateALaChuchaCommand
