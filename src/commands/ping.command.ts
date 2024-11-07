@@ -1,16 +1,27 @@
-import type { CommandInteraction } from 'discord.js'
+import type { ChatInputCommandInteraction, Client } from 'discord.js'
 import { SlashCommandBuilder } from 'discord.js'
+import { Command } from '../command'
 
-const commandDefinition = new SlashCommandBuilder()
-  .setName('ping')
-  .setDescription('Test connectivity')
+export class PingCommand extends Command {
+  constructor(client: Client) {
+    const name = 'ping';
+    const commandDefinition = new SlashCommandBuilder()
+      .setName(name)
+      .setDescription('Prueba de conexion');
+    
+    super({
+      client,
+      name,
+      commandDefinition,
+    })
+  }
 
-async function handlePingCommand(interaction: CommandInteraction) {
-  console.info('Handler')
-  interaction.reply('Pong!')
+  public execute(interaction: ChatInputCommandInteraction, opts?: Record<string, any>): void {
+    const reply = this.getReply(interaction);
+    
+    reply('Pong!');
+  }
 }
 
-export const PingCommand = {
-  data: commandDefinition,
-  execute: handlePingCommand
-}
+export default PingCommand
+module.exports = PingCommand
