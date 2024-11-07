@@ -69,6 +69,18 @@ export class AudioPlayerService {
     return { ...info, inQueue: false };
   }
 
+  public skip() {
+    const newSong = this.queue.shift();
+    
+    if (!newSong) {
+      this.player.stop();
+      return;
+    }
+    this.playNow(newSong.info);
+
+    return newSong.info
+  }
+
   public pause() {
     this.player.pause();
   }
@@ -83,5 +95,12 @@ export class AudioPlayerService {
 
   public destroy() {
     this.voiceConnection.destroy();
+  }
+
+  get actualSong() {
+    return this.nowPlaying
+  }
+  get songQueue() {
+    return this.queue.map(({ info }) => info)
   }
 }
