@@ -1,10 +1,11 @@
-import { ICommand, IVoiceState } from "../interfaces";
+import { AudioPlayerService } from "../services";
+import { ICommand } from "../interfaces";
 import type { Collection } from "discord.js";
 
 declare module "discord.js" {
   export interface Client {
     commands: Collection<string, ICommand>;
-    voiceState: Map<string, IVoiceState>
+    audioPlayer: Map<string, AudioPlayerService>
   }
   export type InteractionType<T extends ApplicationCommandType> = T extends ApplicationCommandType.ChatInput
   ? ChatInputCommandInteraction

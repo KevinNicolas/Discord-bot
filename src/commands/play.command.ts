@@ -3,7 +3,7 @@ import { SlashCommandBuilder } from "discord.js";
 import { createAudioPlayer, createAudioResource, NoSubscriberBehavior } from "@discordjs/voice";
 import { Command } from "../command";
 import { getVoiceChannelConnection, joinIntoVoiceChannel } from "../utils";
-import { YtdlService } from "../services";
+import { AudioPlayerService, YtdlService } from "../services";
 import { IVoiceState } from "interfaces";
 
 export class PlayCommand extends Command {
@@ -36,6 +36,7 @@ export class PlayCommand extends Command {
         reply(voiceConnection.error)
         return;
       }
+
       voiceChannel = voiceConnection;
 
       if (voiceChannel.error) {
@@ -44,48 +45,20 @@ export class PlayCommand extends Command {
       }
     }
 
-    let voiceState = this.client.voiceState.get(interaction.guild!.id)
-    if (!voiceState) {
-      const player = createAudioPlayer({ 
-        behaviors: {
-          noSubscriber: NoSubscriberBehavior.Pause,
-        } 
-      });
-
-      
-
-      const state: IVoiceState = {
-        guild: interaction.guild!,
-        playerSubscription: voiceChannel.connection!.subscribe(player)!,
-        queue: [],
-        voiceConnection: voiceChannel.connection!,
-        volume: 100,
-        loop: false,
-        playing: false
-      }
-
-      voiceState = state;
-      this.client.voiceState.set(interaction.guild!.id, voiceState)
+    let audioPlayer = this.client.audioPlayer.get(interaction.guild!.id)
+    if (!audioPlayer) {
+      audioPlayer = new AudioPlayerService(voiceChannel.connection!);
+      this.client.audioPlayer.set(interaction.guild!.id, audioPlayer);
     }
-
-    voiceState.voiceConnection.setSpeaking(true);
 
     const url = interaction.options.getString('url', true)
-    const audioDetails = await YtdlService.fetchBasicInfo(url)
+    const audioInfo = await audioPlayer.play(url);
 
-    if (voiceState.playing) {
-      voiceState.queue.push({ info: audioDetails });
-      reply(`"${audioDetails.title}" fue agregado al queue`);
-    }
-    else {
-      const stream = YtdlService.fetchStream(url);
-      const source = createAudioResource(stream);
-      voiceState.playerSubscription.player.play(source);
-      voiceState.playing = true;
-      reply(`Reproduciendo "${audioDetails.title}"`);
-    }
+    const message = audioInfo.inQueue 
+      ? `"${audioInfo.title}" fue agregado al queue`
+      : `Reproduciendo "${audioInfo.title}"`;
 
-    this.client.voiceState.set(interaction.guild!.id, voiceState);
+    reply(message)
   }
 }
 

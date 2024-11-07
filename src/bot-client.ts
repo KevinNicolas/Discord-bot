@@ -24,7 +24,7 @@ export class BotClient extends Client {
 
   private async init() {
     this.commands = new Collection();
-    this.voiceState = new Map();
+    this.audioPlayer = new Map();
 
     await this.loadCommands();
     await this.loadEvents();

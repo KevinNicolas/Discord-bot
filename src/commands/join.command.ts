@@ -2,6 +2,7 @@ import type { Client, ChatInputCommandInteraction } from 'discord.js'
 import { SlashCommandBuilder } from "discord.js";
 import { Command } from "../command";
 import { joinIntoVoiceChannel } from '../utils'
+import { AudioPlayerService } from '../services'
 
 export class JoinCommand extends Command {
   constructor(client: Client) {
@@ -25,6 +26,9 @@ export class JoinCommand extends Command {
       reply(voiceChannelInfo.error);
       return;
     }
+
+    const audioPlayer = new AudioPlayerService(voiceChannelInfo.connection!);
+    this.client.audioPlayer.set(interaction.guild!.id, audioPlayer);
 
     reply(`Ingresando a "${voiceChannelInfo.voiceChannel?.name}"`)
   }

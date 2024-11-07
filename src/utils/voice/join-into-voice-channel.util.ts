@@ -16,7 +16,6 @@ export function joinIntoVoiceChannel(interaction: ChatInputCommandInteraction): 
     adapterCreator: interaction.guild!.voiceAdapterCreator as any,
   })
 
-  connection.setSpeaking(false);
   return {
     connection,
     voiceChannel
