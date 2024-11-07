@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npm run build && npm run start",
     "start": "node build/main.js",
-    "build": "rm -r build && rm -r tsconfig.tsbuildinfo && tsc"
+    "build": "rm -rf build && rm -rf tsconfig.tsbuildinfo && tsc"
   },
   "keywords": [],
   "author": "",
